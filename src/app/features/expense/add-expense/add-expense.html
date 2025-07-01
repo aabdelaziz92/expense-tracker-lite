@@ -1,0 +1,33 @@
+<section class="align-center min-h-screen rounded">
+    <h3 class="mb-6 flex text-2xl font-bold"><lucide-icon class="cursor-pointer" name="arrow-left" alt="Back Icon"
+            [routerLink]="['/dashboard']"></lucide-icon>
+        <span class="m-auto">Add Expense</span>
+    </h3>
+    <form [formGroup]="addForm" class="add-form">
+        <div>
+            <label for="categories">Categories</label>
+            <!-- <input type="email" id="email" placeholder="Enter your email" formControlName="email" class="border-0"> -->
+            <select name="categories" id="" formControlName="categories">
+                <option value="rent">Rent</option>
+                <option value="transport">Transport</option>
+                <option value="shopping">Shopping</option>
+                <option value="entertainment">Entertainment</option>
+            </select>
+        </div>
+        <div>
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" placeholder="Enter Amount" formControlName="amount">
+        </div>
+        <div>
+            <label for="date">Date</label>
+            <input type="date" id="date" placeholder="Choose Date" formControlName="date">
+        </div>
+        <div>
+            <label for="attachment">Attach Receipt</label>
+            <input type="file" id="attachment" formControlName="attachment">
+        </div>
+        <div>
+            <button (click)="addExpense()" [disabled]="!addForm.valid">Save</button>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,43 @@
+<section class="bg-primary-dark text-white min-h-[300px] flex flex-col justify-between rounded-b-lg shadow-lg">
+    <header class="flex justify-between items-center">
+        <div class="user flex items-center">
+            <figure class="w-12 h-12 rounded-full border-2 mr-1 flex items-center justify-center">
+                <!-- <img src="assets/user-avatar.png" alt="User Avatar" class="w-12 h-12 rounded-full"> -->
+                <lucide-icon name="user" alt="User Icon"></lucide-icon>
+            </figure>
+            <div class="user-info">
+                <p class="text-xs">Good Morning</p>
+                <h2 class="text-sm font-medium">Ahmed Abdelaziz</h2>
+            </div>
+        </div>
+        <div class="filter">
+            <select name="filter" id="" class="bg-background text-txt-primary text-sm p-2 rounded">
+                <option value="all">All</option>
+                <option value="today">Today</option>
+                <option value="this_week">This Week</option>
+                <option value="this_month">This Month</option>
+            </select>
+        </div>
+    </header>
+    <main class="relative -bottom-15">
+        <div class="mb-6">
+            <p>Total Balance</p>
+            <h2 class="font-bold">$ 2,548.00</h2>
+        </div>
+        <div class="flex justify-between items-center">
+            <div class="expense-item">
+                <p class="flex items-center text-sm"><span
+                        class="bg-primary-dark text-center p-1 rounded-full mr-1"><lucide-icon name="arrow-down"
+                            size="12"></lucide-icon></span> Income</p>
+                <p class="font-medium">$ 100.00</p>
+            </div>
+            <div class="expense-item">
+                <p class="flex items-center text-sm"><span
+                        class="bg-primary-dark text-center p-1 rounded-full mr-1"><lucide-icon name="arrow-up"
+                            size="12"></lucide-icon></span> Expenses</p>
+                <p class="font-medium">$ 200.00</p>
+            </div>
+        </div>
+    </main>
+</section>
+<app-list-of-expenses></app-list-of-expenses>

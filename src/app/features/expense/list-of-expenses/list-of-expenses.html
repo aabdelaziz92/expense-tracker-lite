@@ -1,0 +1,40 @@
+<section class="shadow-none bg-input-background pt-15 min-h-[calc(100vh-300px)]">
+    <h3 class="mb-4">Recent Expenses</h3>
+    <ul class="expense-list">
+        <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2 mb-4">
+            <div class="flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary-light mr-2 flex items-center justify-center">
+                    <lucide-icon name="user" alt="User Icon"></lucide-icon>
+                </span>
+                <div class="expense-info">
+                    <p class="text-sm font-medium">Groceries</p>
+                    <p class="text-xs text-txt-secondary">manually</p>
+                </div>
+            </div>
+            <div class="expense-amount text-left">
+                <p class="text-sm font-medium">$100</p>
+                <p class="text-xs text-txt-secondary">Today 12:00pm</p>
+            </div>
+        </li>
+        <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2 mb-4">
+            <div class="flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary-light mr-2 flex items-center justify-center">
+                    <lucide-icon name="user" alt="User Icon"></lucide-icon>
+                </span>
+                <div class="expense-info">
+                    <p class="text-sm font-medium">Groceries</p>
+                    <p class="text-xs text-txt-secondary">manually</p>
+                </div>
+            </div>
+            <div class="expense-amount text-left">
+                <p class="text-sm font-medium">$100</p>
+                <p class="text-xs text-txt-secondary">Today 12:00pm</p>
+            </div>
+        </li>
+    </ul>
+    <div class="flex justify-center">
+        <button (click)="addExpense()" class="w-15 h-15 rounded-full absolute bottom-10 shadow-lg">
+            <i-lucide name="plus" alt="Add Expense" class="flex justify-center align-center"></i-lucide>
+        </button>
+    </div>
+</section>
