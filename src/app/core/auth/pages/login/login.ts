@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthStore } from '../../../services/auth.store';
 
 @Component({
   selector: 'app-login',
@@ -13,19 +14,27 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class Login {
   loginForm: FormGroup;
+  authStore: AuthStore = inject(AuthStore);
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['test@example.com', [Validators.required, Validators.email]],
+      password: ['test123', Validators.required]
     });
   }
 
 
   login() {
     if (this.loginForm.valid) {
-      localStorage.setItem('user', JSON.stringify(this.loginForm.value));
-      this.router.navigate(['/dashboard']);
+      const val = this.loginForm.value;
+      this.authStore.login(val.email, val.password).subscribe({
+        next: () => {
+          this.router.navigateByUrl('/dashboard');
+        },
+        error: (err) => {
+          console.error('Login failed', err);
+        }
+      });
     }
   }
 }
