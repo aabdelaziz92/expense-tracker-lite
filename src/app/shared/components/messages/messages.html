@@ -1,0 +1,10 @@
+@if(show) {
+<div class="messages-container">
+    @for(error of (errors$ | async); track error) {
+    <div class="message">
+        {{ error.text }}
+    </div>
+    }
+    <lucide-icon class="close" name="x" alt="Close Icon" (click)="close()"></lucide-icon>
+</div>
+}
