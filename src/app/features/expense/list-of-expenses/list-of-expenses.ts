@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 export class ListOfExpenses {
   expensesStore = inject(ExpensesStore);
   @Input() expenses$!: Observable<Expense[]>;
+  @Input() currency!: string;
   startIndex = 0;
 
   constructor(private router: Router) {

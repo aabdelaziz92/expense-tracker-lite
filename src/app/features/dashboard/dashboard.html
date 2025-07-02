@@ -13,38 +13,43 @@
                 <h2 class="text-sm font-medium">{{ (user$ | async)?.name }}</h2>
             </div>
         </div>
-        <div class="filter">
+        <div class="filter" [formGroup]="dashboardForm">
             <select name="filter" id="" class="bg-background text-txt-primary text-sm p-2 rounded"
-                formControlName="filter" (change)="filterExpenses($event)">
+                formControlName="filter">
                 <option value="all">All</option>
                 <option value="today">Today</option>
                 <option value="this_week">This Week</option>
                 <option value="this_month">This Month</option>
+            </select>
+            <select name="currency" formControlName="currency"
+                class="bg-background text-txt-primary text-sm p-2 rounded" value="egp" #currency>
+                <option value="usd">USD</option>
+                <option value="egp" selected>EGP</option>
             </select>
         </div>
     </header>
     <main class="relative -bottom-15">
         <div class="mb-6">
             <p>Total Balance</p>
-            <h2 class="font-bold">{{ (getTotalBalance() | async) | currency}}</h2>
+            <h2 class="font-bold">{{ (getTotalBalance() | async) | currency: currency.value.toUpperCase()}}</h2>
         </div>
         <div class="flex justify-between items-center">
             <div class="expense-item">
                 <p class="flex items-center text-sm"><span
                         class="bg-primary-dark text-center p-1 rounded-full mr-1"><lucide-icon name="arrow-down"
                             size="12"></lucide-icon></span> Income</p>
-                <p class="font-medium">{{ (getIncomeAmount() | async) | currency}}</p>
+                <p class="font-medium">{{ (getIncomeAmount() | async) | currency: currency.value.toUpperCase()}}</p>
             </div>
             <div class="expense-item">
                 <p class="flex items-center text-sm"><span
                         class="bg-primary-dark text-center p-1 rounded-full mr-1"><lucide-icon name="arrow-up"
                             size="12"></lucide-icon></span> Expenses</p>
-                <p class="font-medium">{{ (getExpenseAmount() | async) | currency}}</p>
+                <p class="font-medium">{{ (getExpenseAmount() | async) | currency: currency.value.toUpperCase()}}</p>
             </div>
         </div>
     </main>
 </section>
-<app-list-of-expenses [expenses$]="filteredExpenses$" infiniteScroll [infiniteScrollDistance]="4"
-    [infiniteScrollThrottle]="50" (scrolled)="loadMore()">
+<app-list-of-expenses [expenses$]="filteredExpenses$" [currency]="currency.value.toUpperCase()" infiniteScroll
+    [infiniteScrollDistance]="4" [infiniteScrollThrottle]="50" (scrolled)="loadMore()">
 </app-list-of-expenses>
 <!-- <button (click)="loadMore()" class="bg-transparent text-txt-main font-bold hover:underline">Load more</button> -->

@@ -3,12 +3,14 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { ArrowDown, ArrowLeft, ArrowUp, BanknoteArrowUp, Car, FerrisWheel, Fuel, Gift, HandCoins, House, LucideAngularModule, Pizza, Plus, Shapes, ShoppingCart, User, X } from 'lucide-angular';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    provideHttpClient(),
     importProvidersFrom(LucideAngularModule.pick({
       User,
       ArrowUp,

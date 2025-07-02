@@ -5,8 +5,8 @@ import { AuthStore } from '../../core/services/auth.store';
 import { CommonModule } from '@angular/common';
 import { ExpensesStore } from '../../core/services/expenses.store';
 import { Expense } from '../../core/models/expense';
-import { map, Observable, of, switchMap, withLatestFrom } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { combineLatest, map, Observable, of, withLatestFrom } from 'rxjs';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 @Component({
@@ -15,75 +15,98 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
     CommonModule,
     ListOfExpenses,
     LucideAngularModule,
-    InfiniteScrollDirective
+    InfiniteScrollDirective,
+    ReactiveFormsModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-  user$ = inject(AuthStore).user$;
-  income$!: Observable<Expense[]>;
-  expenses$!: Observable<Expense[]>;
-  filter: FormControl = new FormControl('all');
+  private authStore = inject(AuthStore);
+  private expensesStore = inject(ExpensesStore);
+  user$ = this.authStore.user$;
+  dashboardForm: FormGroup = new FormGroup({
+    filter: new FormControl('all'),
+    currency: new FormControl('egp')
+  });
   filteredExpenses$: Observable<Expense[]> = of([]);
-  nextPage: number = 0;
   currentFilter: string = 'all';
+  nextPage: number = 0;
   pageSize: number = 10;
+  income$: Observable<Expense[]> = this.expensesStore.incomeExpenses(this.currentFilter);
+  expenses$: Observable<Expense[]> = this.expensesStore.outcomeExpenses(this.currentFilter)
 
-  constructor(private expensesStore: ExpensesStore) {
-
-  }
 
   ngOnInit(): void {
-    this.filteredExpenses$ = this.getListOfExpenses('all');
-    this.income$ = this.expensesStore.incomeExpenses();
-    this.expenses$ = this.expensesStore.outcomeExpenses();
+    const filterControl = this.dashboardForm.get('filter');
+    const currencyControl = this.dashboardForm.get('currency');
+
+    this.filteredExpenses$ = this.getListOfExpenses(this.currentFilter);
+    this.expensesStore.setCurrency('egp');
+
+    filterControl?.valueChanges.subscribe(value => {
+      this.currentFilter = value || 'all';
+      this.nextPage = 0;
+      this.filteredExpenses$ = this.getListOfExpenses(this.currentFilter);
+      this.income$ = this.expensesStore.incomeExpenses(this.currentFilter);
+      this.expenses$ = this.expensesStore.outcomeExpenses(this.currentFilter);
+    });
+
+    currencyControl?.valueChanges.subscribe(value => {
+      this.expensesStore.setCurrency(value || 'egp');
+      this.filteredExpenses$ = this.getListOfExpenses(this.currentFilter);
+    });
   }
+
 
   getTimeOfDay(): string {
     const hours = new Date().getHours();
-    if (hours >= 5 && hours < 12) {
-      return 'Morning';
-    } else if (hours >= 12 && hours < 18) {
-      return 'Afternoon';
-    } else {
-      return 'Evening';
-    }
+    if (hours >= 5 && hours < 12) return 'Morning';
+    if (hours >= 12 && hours < 18) return 'Afternoon';
+    return 'Evening';
   }
 
   getIncomeAmount(): Observable<number> {
-    return this.income$.pipe(
-      map(expenses => expenses.reduce((total, exp) => +total + +exp.amount, 0))
+    return combineLatest([
+      this.income$,
+      this.expensesStore.rate$
+    ]).pipe(
+      map(([expenses, rate]) =>
+        expenses.reduce((sum, exp) => sum + +exp.amount, 0) * rate
+      )
     );
   }
 
   getExpenseAmount(): Observable<number> {
-    return this.expenses$.pipe(
-      map(expenses => expenses.reduce((total, exp) => +total + +exp.amount, 0))
+    return combineLatest([
+      this.expenses$,
+      this.expensesStore.rate$
+    ]).pipe(
+      map(([expenses, rate]) =>
+        expenses.reduce((sum, exp) => sum + +exp.amount, 0) * rate
+      )
     );
   }
 
   getTotalBalance(): Observable<number> {
-    return this.getIncomeAmount().pipe(
-      switchMap(income => this.getExpenseAmount().pipe(
-        map(expenses => +income - +expenses)
-      ))
+    return combineLatest([
+      this.getIncomeAmount(),
+      this.getExpenseAmount()
+    ]).pipe(
+      map(([income, expense]) => income - expense)
     );
   }
 
-  filterExpenses($event: Event) {
-    const filter = ($event.target as HTMLSelectElement).value as string;
-    this.currentFilter = filter;      // track current filter for pagination
-    this.nextPage = 0;                // reset to first page
-    this.filteredExpenses$ = this.getListOfExpenses(filter, this.nextPage, this.pageSize);
-
-    // update income and expenses
-    this.income$ = this.expensesStore.incomeExpenses();
-    this.expenses$ = this.expensesStore.outcomeExpenses();
-  }
-
-  getListOfExpenses(filter: string, pageNumber = 0, pageSize = this.pageSize): Observable<Expense[]> {
-    return this.expensesStore.getFilteredExpenses(filter, pageNumber, pageSize);
+  getListOfExpenses(filter: string, pageNumber = 0): Observable<Expense[]> {
+    return this.expensesStore.getFilteredExpenses(filter, pageNumber, this.pageSize).pipe(
+      withLatestFrom(this.expensesStore.rate$),
+      map(([expenses, rate]) =>
+        expenses.map(exp => ({
+          ...exp,
+          amount: +exp.amount * rate
+        }))
+      )
+    );
   }
 
   loadMore() {

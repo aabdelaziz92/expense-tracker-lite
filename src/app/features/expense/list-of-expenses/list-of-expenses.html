@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="expense-amount text-left">
-                <p class="text-sm font-medium">{{ expense.amount | currency }}</p>
+                <p class="text-sm font-medium">{{ expense.amount | currency: currency }}</p>
                 @if(checkIfToday(expense.date)) {
                 <p class="text-xs text-txt-secondary">Today {{ expense.date | date: 'shortTime' }}</p>
                 } @else {
