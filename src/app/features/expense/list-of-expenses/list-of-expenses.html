@@ -1,40 +1,33 @@
 <section class="shadow-none bg-input-background pt-15 min-h-[calc(100vh-300px)]">
     <h3 class="mb-4">Recent Expenses</h3>
     <ul class="expense-list">
+        @for(expense of (expenses$ | async); track expense.id) {
         <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2 mb-4">
             <div class="flex items-center">
-                <span class="w-8 h-8 rounded-full bg-primary-light mr-2 flex items-center justify-center">
-                    <lucide-icon name="user" alt="User Icon"></lucide-icon>
+                <span class="w-8 h-8 rounded-full mr-2 flex items-center justify-center"
+                    [attr.style]="'background-color: ' + expense.color">
+                    <lucide-icon class="text-white" [name]="expense.icon"
+                        [attr.alt]="expense.category + ' Icon'"></lucide-icon>
                 </span>
                 <div class="expense-info">
-                    <p class="text-sm font-medium">Groceries</p>
+                    <p class="text-sm font-medium">{{ expense.category }}</p>
                     <p class="text-xs text-txt-secondary">manually</p>
                 </div>
             </div>
             <div class="expense-amount text-left">
-                <p class="text-sm font-medium">$100</p>
-                <p class="text-xs text-txt-secondary">Today 12:00pm</p>
+                <p class="text-sm font-medium">{{ expense.amount | currency }}</p>
+                @if(checkIfToday(expense.date)) {
+                <p class="text-xs text-txt-secondary">Today {{ expense.date | date: 'shortTime' }}</p>
+                } @else {
+                <p class="text-xs text-txt-secondary">{{ expense.date | date: 'short' }}</p> <!--Today 12:00pm-->
+                }
             </div>
         </li>
-        <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2 mb-4">
-            <div class="flex items-center">
-                <span class="w-8 h-8 rounded-full bg-primary-light mr-2 flex items-center justify-center">
-                    <lucide-icon name="user" alt="User Icon"></lucide-icon>
-                </span>
-                <div class="expense-info">
-                    <p class="text-sm font-medium">Groceries</p>
-                    <p class="text-xs text-txt-secondary">manually</p>
-                </div>
-            </div>
-            <div class="expense-amount text-left">
-                <p class="text-sm font-medium">$100</p>
-                <p class="text-xs text-txt-secondary">Today 12:00pm</p>
-            </div>
-        </li>
+        }
     </ul>
     <div class="flex justify-center">
-        <button (click)="addExpense()" class="w-15 h-15 rounded-full absolute bottom-10 shadow-lg">
-            <i-lucide name="plus" alt="Add Expense" class="flex justify-center align-center"></i-lucide>
+        <button (click)="addExpense()" class="w-15 h-15 rounded-full fixed bottom-10 shadow-lg">
+            <lucide-icon name="plus" alt="Add Expense" class="flex justify-center align-center"></lucide-icon>
         </button>
     </div>
 </section>
