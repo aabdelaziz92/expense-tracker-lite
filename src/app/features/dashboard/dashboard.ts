@@ -76,6 +76,10 @@ export class Dashboard implements OnInit {
     this.currentFilter = filter;      // track current filter for pagination
     this.nextPage = 0;                // reset to first page
     this.filteredExpenses$ = this.getListOfExpenses(filter, this.nextPage, this.pageSize);
+
+    // update income and expenses
+    this.income$ = this.expensesStore.incomeExpenses();
+    this.expenses$ = this.expensesStore.outcomeExpenses();
   }
 
   getListOfExpenses(filter: string, pageNumber = 0, pageSize = this.pageSize): Observable<Expense[]> {

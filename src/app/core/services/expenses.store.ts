@@ -16,6 +16,9 @@ export class ExpensesStore {
     messagesService: MessagesService = inject(MessagesService);
     private categoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
     categories$: Observable<Category[]> = this.categoriesSubject.asObservable();
+    filter: string = 'all';
+    pageNumber: number = 0;
+    pageSize: number = 10;
     // http: HttpClient = inject(HttpClient);
 
 
@@ -37,6 +40,10 @@ export class ExpensesStore {
     }
 
     getFilteredExpenses(filter: string, pageNumber: number = 0, pageSize: number = 10): Observable<Expense[]> {
+        this.filter = filter;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+
         return this.expenses$.pipe(
             map(expenses => {
                 let filteredExpenses: Expense[];
@@ -66,14 +73,14 @@ export class ExpensesStore {
         );
     }
 
-    incomeExpenses(): Observable<Expense[]> {
-        return this.expenses$.pipe(
+    incomeExpenses(): Observable<Expense[]> { //this.expenses$
+        return this.getFilteredExpenses(this.filter, this.pageNumber, this.pageSize).pipe(
             map(expenses => expenses.filter(exp => exp.category === 'salary' || exp.category === 'gift'))
         );
     }
 
-    outcomeExpenses(): Observable<Expense[]> {
-        return this.expenses$.pipe(
+    outcomeExpenses(): Observable<Expense[]> { //this.expenses$
+        return this.getFilteredExpenses(this.filter, this.pageNumber, this.pageSize).pipe(
             map(expenses => expenses.filter(exp => exp.category !== 'salary' && exp.category !== 'gift'))
         );
     }
