@@ -35,9 +35,9 @@ export class Dashboard implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filteredExpenses$ = this.getListOfExpenses('all');
     this.income$ = this.expensesStore.incomeExpenses();
     this.expenses$ = this.expensesStore.outcomeExpenses();
-    this.filteredExpenses$ = this.getListOfExpenses('all');
   }
 
   getTimeOfDay(): string {
