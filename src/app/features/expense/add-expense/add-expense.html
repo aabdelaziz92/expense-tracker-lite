@@ -4,30 +4,61 @@
         <span class="m-auto">Add Expense</span>
     </h3>
     <form [formGroup]="addForm" class="add-form">
-        <div>
+        <div class="mb-8">
             <label for="categories">Categories</label>
-            <!-- <input type="email" id="email" placeholder="Enter your email" formControlName="email" class="border-0"> -->
-            <select name="categories" id="" formControlName="categories">
-                <option value="rent">Rent</option>
-                <option value="transport">Transport</option>
-                <option value="shopping">Shopping</option>
-                <option value="entertainment">Entertainment</option>
+            <select name="category" id="" formControlName="category" (change)="onCategorySelected($event)">
+                <option value="" disabled selected>Select Category</option>
+                @for(category of (categories$ | async); track category.id) {
+                <option value="{{category.value}}">{{category.label}}</option>
+                }
             </select>
+            @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
+            <div class="error-message text-sm font-medium mb-2 text-red-500">
+                @if(addForm.get('category')?.hasError('required')) {
+                <div>Category is required.</div>
+                }
+            </div>
+            }
         </div>
-        <div>
+        <div class="mb-8">
             <label for="amount">Amount</label>
             <input type="text" id="amount" placeholder="Enter Amount" formControlName="amount">
+            @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
+            <div class="error-message text-sm font-medium mb-2 text-red-500">
+                @if(addForm.get('amount')?.hasError('required')) {
+                <div>Amount is required.</div>
+                }
+                @if(addForm.get('amount')?.hasError('pattern')) {
+                <div>Amount must be a valid number.</div>
+                }
+                @if(addForm.get('amount')?.hasError('min')) {
+                <div>Amount must be greater than 0.</div>
+                }
+            </div>
+            }
         </div>
-        <div>
+        <div class="mb-8">
             <label for="date">Date</label>
-            <input type="date" id="date" placeholder="Choose Date" formControlName="date">
+            <input type="date" id="date" placeholder="Choose Date" [min]="today" formControlName="date">
+            @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
+            <div class="error-message text-sm font-medium mb-2 text-red-500">
+                @if(addForm.get('date')?.hasError('required')) {
+                <div>Date is required.</div>
+                }
+            </div>
+            }
         </div>
-        <div>
+        <!-- <div class="mb-8">
             <label for="attachment">Attach Receipt</label>
             <input type="file" id="attachment" formControlName="attachment">
+        </div> -->
+        <div class="mb-8">
+            <app-categories-list [categories]="(categories$ | async) || []"
+                (selectedCategory)="addForm.patchValue({ category: $event.value, icon: $event.icon, color: $event.color })"></app-categories-list>
         </div>
         <div>
-            <button (click)="addExpense()" [disabled]="!addForm.valid">Save</button>
+            <button (click)="addExpense()" [disabled]="!addForm.valid"
+                class="disabled:bg-blue-300 disabled:cursor-not-allowed">Save</button>
         </div>
     </form>
 </section>

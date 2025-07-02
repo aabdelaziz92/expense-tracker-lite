@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { delay, map, shareReplay } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { User } from "../models/user";
 
 const AUTH_DATA = "auth_data";
@@ -32,7 +32,8 @@ export class AuthStore {
         const mockUser: User = {
             id: 'mock-id',
             email,
-            pictureUrl: 'https://example.com/default-picture.png'
+            name: 'Ahmed Abdelaziz',
+            pictureUrl: '' //https://example.com/default-picture.png
         };
         return of<User>(mockUser).pipe(
             map((user: User) => {

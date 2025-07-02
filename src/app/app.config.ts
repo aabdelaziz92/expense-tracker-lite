@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListen
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { ArrowDown, ArrowLeft, ArrowUp, Car, FerrisWheel, Fuel, HandCoins, House, LucideAngularModule, Plus, ShoppingCart, User } from 'lucide-angular';
+import { ArrowDown, ArrowLeft, ArrowUp, BanknoteArrowUp, Car, FerrisWheel, Fuel, Gift, HandCoins, House, LucideAngularModule, Pizza, Plus, Shapes, ShoppingCart, User, X } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +20,12 @@ export const appConfig: ApplicationConfig = {
       House,
       HandCoins,
       Plus,
-      ArrowLeft
+      ArrowLeft,
+      X,
+      Pizza,
+      Shapes,
+      BanknoteArrowUp,
+      Gift
     })),
   ]
 };

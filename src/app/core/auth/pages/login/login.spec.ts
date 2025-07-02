@@ -71,12 +71,13 @@ fdescribe('Login', () => {
     expect(password.valid).toBeTrue();
   });
 
-  it('should call authStore.login and navigate on successful login', (done) => {
+  it('should call authStore.login and navigate on successful login', (done: DoneFn) => {
     const formValue = component.loginForm.value;
 
     authStoreSpy.login.and.returnValue(of({
       id: 'mock-id',
       email: formValue.email,
+      name: 'Mock User',
       pictureUrl: 'https://example.com/default-picture.png'
     }));
 
