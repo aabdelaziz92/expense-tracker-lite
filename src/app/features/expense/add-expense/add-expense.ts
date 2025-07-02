@@ -48,7 +48,8 @@ export class AddExpense {
       date: ['', Validators.required],
       attachment: [''],
       icon: [''],
-      color: ['']
+      color: [''],
+      currency: ['egp', Validators.required]
     });
   }
 

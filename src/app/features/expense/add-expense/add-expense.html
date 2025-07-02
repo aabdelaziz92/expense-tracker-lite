@@ -5,8 +5,8 @@
     </h3>
     <form [formGroup]="addForm" class="add-form">
         <div class="mb-8">
-            <label for="categories">Categories</label>
-            <select name="category" id="" formControlName="category" (change)="onCategorySelected($event)">
+            <label for="category">Categories</label>
+            <select name="category" id="category" formControlName="category" (change)="onCategorySelected($event)">
                 <option value="" disabled selected>Select Category</option>
                 @for(category of (categories$ | async); track category.id) {
                 <option value="{{category.value}}">{{category.label}}</option>
@@ -52,6 +52,21 @@
             <label for="attachment">Attach Receipt</label>
             <input type="file" id="attachment" formControlName="attachment">
         </div> -->
+        <div class="mb-8">
+            <label for="currency">Currency</label>
+            <select name="currency" id="currency" formControlName="currency">
+                <option value="" disabled selected>Select Currency</option>
+                <option value="usd">USD</option>
+                <option value="egp">EGP</option>
+            </select>
+            @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
+            <div class="error-message text-sm font-medium mb-2 text-red-500">
+                @if(addForm.get('category')?.hasError('required')) {
+                <div>Category is required.</div>
+                }
+            </div>
+            }
+        </div>
         <div class="mb-8">
             <app-categories-list [categories]="(categories$ | async) || []"
                 (selectedCategory)="addForm.patchValue({ category: $event.value, icon: $event.icon, color: $event.color })"></app-categories-list>
