@@ -44,4 +44,7 @@
         </div>
     </main>
 </section>
-<app-list-of-expenses [expenses$]="filteredExpenses$"></app-list-of-expenses>
+<app-list-of-expenses [expenses$]="filteredExpenses$" infiniteScroll [infiniteScrollDistance]="4"
+    [infiniteScrollThrottle]="50" (scrolled)="loadMore()">
+</app-list-of-expenses>
+<!-- <button (click)="loadMore()" class="bg-transparent text-txt-main font-bold hover:underline">Load more</button> -->

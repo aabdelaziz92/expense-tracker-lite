@@ -5,15 +5,17 @@ import { AuthStore } from '../../core/services/auth.store';
 import { CommonModule } from '@angular/common';
 import { ExpensesStore } from '../../core/services/expenses.store';
 import { Expense } from '../../core/models/expense';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap, withLatestFrom } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     CommonModule,
     ListOfExpenses,
-    LucideAngularModule
+    LucideAngularModule,
+    InfiniteScrollDirective
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
@@ -24,6 +26,9 @@ export class Dashboard implements OnInit {
   expenses$!: Observable<Expense[]>;
   filter: FormControl = new FormControl('all');
   filteredExpenses$: Observable<Expense[]> = of([]);
+  nextPage: number = 0;
+  currentFilter: string = 'all';
+  pageSize: number = 10;
 
   constructor(private expensesStore: ExpensesStore) {
 
@@ -67,10 +72,23 @@ export class Dashboard implements OnInit {
   }
 
   filterExpenses($event: Event) {
-    this.filteredExpenses$ = this.getListOfExpenses(($event.target as HTMLSelectElement).value as string);
+    const filter = ($event.target as HTMLSelectElement).value as string;
+    this.currentFilter = filter;      // track current filter for pagination
+    this.nextPage = 0;                // reset to first page
+    this.filteredExpenses$ = this.getListOfExpenses(filter, this.nextPage, this.pageSize);
   }
 
-  getListOfExpenses(filter: string): Observable<Expense[]> {
-    return this.expensesStore.filterByDate(filter);
+  getListOfExpenses(filter: string, pageNumber = 0, pageSize = this.pageSize): Observable<Expense[]> {
+    return this.expensesStore.getFilteredExpenses(filter, pageNumber, pageSize);
+  }
+
+  loadMore() {
+    this.nextPage++;
+    const nextPageExpenses$ = this.expensesStore.getFilteredExpenses(this.currentFilter, this.nextPage, this.pageSize);
+
+    this.filteredExpenses$ = nextPageExpenses$.pipe(
+      withLatestFrom(this.filteredExpenses$),
+      map(([newExpenses, oldExpenses]) => [...oldExpenses, ...newExpenses])
+    );
   }
 }

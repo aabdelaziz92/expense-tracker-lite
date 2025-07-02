@@ -18,8 +18,13 @@ import { CommonModule } from '@angular/common';
 export class ListOfExpenses {
   expensesStore = inject(ExpensesStore);
   @Input() expenses$!: Observable<Expense[]>;
+  startIndex = 0;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    this.expenses$?.subscribe(expenses => {
+      this.startIndex = expenses.length;
+    });
+  }
 
 
   addExpense() {

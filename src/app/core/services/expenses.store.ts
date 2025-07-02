@@ -1,5 +1,5 @@
-import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from "rxjs";
-import { Expense } from "../models/expense";
+import { BehaviorSubject, catchError, combineLatestWith, map, Observable, of, tap, throwError } from "rxjs";
+import { Expense, sortExpensesByAmount } from "../models/expense";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { LoadingService } from "./loading.service";
@@ -12,11 +12,11 @@ import { Category } from "../models/category";
 export class ExpensesStore {
     private expensesSubject: BehaviorSubject<Expense[]> = new BehaviorSubject<Expense[]>([]);
     expenses$: Observable<Expense[]> = this.expensesSubject.asObservable();
-    // http: HttpClient = inject(HttpClient);
     loadingService: LoadingService = inject(LoadingService);
     messagesService: MessagesService = inject(MessagesService);
     private categoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
     categories$: Observable<Category[]> = this.categoriesSubject.asObservable();
+    // http: HttpClient = inject(HttpClient);
 
 
     constructor() {
@@ -36,24 +36,34 @@ export class ExpensesStore {
         );
     }
 
-    filterByDate(filter: string): Observable<Expense[]> {
-        if (filter === 'all') {
-            return this.expenses$;
-        } else if (filter === 'today') {
-            return this.expenses$.pipe(
-                map(expenses => expenses.filter(exp => this.checkIfToday(exp.date)))
-            )
-        } else if (filter === 'this_week') {
-            return this.expenses$.pipe(
-                map(expenses => expenses.filter(exp => this.isDateInCurrentWeek(exp.date)))
-            );
-        } else if (filter === 'this_month') {
-            return this.expenses$.pipe(
-                map(expenses => expenses.filter(exp => this.isDateInCurrentMonth(exp.date)))
-            );
-        } {
-            return of([]);
-        }
+    getFilteredExpenses(filter: string, pageNumber: number = 0, pageSize: number = 10): Observable<Expense[]> {
+        return this.expenses$.pipe(
+            map(expenses => {
+                let filteredExpenses: Expense[];
+
+                switch (filter) {
+                    case 'today':
+                        filteredExpenses = expenses.filter(exp => this.checkIfToday(exp.date));
+                        break;
+                    case 'this_week':
+                        filteredExpenses = expenses.filter(exp => this.isDateInCurrentWeek(exp.date));
+                        break;
+                    case 'this_month':
+                        filteredExpenses = expenses.filter(exp => this.isDateInCurrentMonth(exp.date));
+                        break;
+                    case 'all':
+                        filteredExpenses = expenses;
+                        break;
+                    default:
+                        return [];
+                }
+
+                const total = filteredExpenses.length;
+                const start = pageNumber * pageSize;
+                const end = start + pageSize;
+                return filteredExpenses.slice(start, end);
+            })
+        );
     }
 
     incomeExpenses(): Observable<Expense[]> {
