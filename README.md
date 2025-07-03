@@ -1,4 +1,72 @@
-# ExpenseTrackerLite
+# 💸 Angular Expense Tracker
+
+An expense tracking dashboard built with Angular standalone components, Tailwind CSS, and reactive forms. This project includes category-based tracking, currency conversion, infinite scroll pagination, and exchange rate integration.
+
+---
+
+## 📐 Overview of Architecture & Structure
+
+This application follows a **modular and reactive architecture** using Angular standalone components.
+
+src/
+├── app/
+│ ├── core/ # Core services, models, and utilities
+│ │ ├── services/
+│ │ ├── models/
+│ ├── components/ # Feature components
+│ │ ├── dashboard/ # Dashboard with list, filters, currency selector
+│ │ └── expense/ # Expense addition form
+│ ├── shared/ # Shared UI components
+│ └── app.config.ts # Angular standalone config (routes, providers)
+
+- Uses **ReactiveFormsModule** for form control and validation.
+- State is temporarily handled via services (`ExpensesStore`, `AuthStore`).
+- API calls are handled using Angular's `HttpClient` in services.
+- Expenses, categories, and exchange rates are managed reactively using `Observables`.
+
+---
+
+## 🔌 API Integration
+
+API integration is done inside the `ExpensesStore` service using Angular's `HttpClient`. Exchange rates are fetched from:
+
+https://v6.exchangerate-api.com/v6/{API_KEY}/latest/USD
+
+- Responses are cached in `localStorage` for 24 hours to reduce API calls.
+- A BehaviorSubject holds exchange rate state, which components subscribe to for reactive updates.
+
+---
+
+## 📄 Pagination Strategy
+
+The app uses **API-based pagination**:
+
+- Each call to `getFilteredExpenses(filter, page, pageSize)` fetches a specific page.
+- The first page is fetched on filter change.
+- More pages are appended on scroll via `loadMore()`, combining the current list with new items.
+
+---
+
+## ⚖️ Trade-offs & Assumptions
+
+- Original and converted amounts are not shown side-by-side yet.
+- Currency conversion mutates the `amount` field — future versions will separate `amountOriginal` and `convertedAmount`.
+- State management is handled manually in services (no NgRx for now).
+- Exchange rate caching is done via localStorage; no fallback cache if offline.
+- Basic validations are present, but advanced UX enhancements (animations, loaders, error states) are minimal.
+
+---
+
+### Setup
+
+````bash
+git clone https://github.com/your-username/angular-expense-tracker.git
+cd angular-expense-tracker
+npm install
+
+---
+
+### 🔧 Key Structure:
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.4.
 
@@ -8,7 +76,7 @@ To start a local development server, run:
 
 ```bash
 ng serve
-```
+````
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
@@ -44,15 +112,17 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 ng test
 ```
 
-## Running end-to-end tests
+## Unimplemented Features
 
-For end-to-end (e2e) testing, run:
+- CI/CD with GitHub Actions or Bitbucket Pipelines
 
-```bash
-ng e2e
-```
+- Export to CSV or PDF
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- State Management with NgRx
+
+- Proper Typography & Layout Enhancements
+
+- Dual display of original and converted amounts
 
 ## Additional Resources
 
