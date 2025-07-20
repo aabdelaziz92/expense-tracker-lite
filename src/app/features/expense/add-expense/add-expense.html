@@ -3,8 +3,8 @@
             [routerLink]="['/dashboard']"></lucide-icon>
         <span class="m-auto">Add Expense</span>
     </h3>
-    <form [formGroup]="addForm" class="add-form">
-        <div class="mb-8">
+    <form [formGroup]="addForm" class="add-form space-y-8">
+        <div>
             <label for="category">Categories</label>
             <select name="category" id="category" formControlName="category" (change)="onCategorySelected($event)">
                 <option value="" disabled selected>Select Category</option>
@@ -20,7 +20,7 @@
             </div>
             }
         </div>
-        <div class="mb-8">
+        <div>
             <label for="amount">Amount</label>
             <input type="text" id="amount" placeholder="Enter Amount" formControlName="amount">
             @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
@@ -37,7 +37,7 @@
             </div>
             }
         </div>
-        <div class="mb-8">
+        <div>
             <label for="date">Date</label>
             <input type="date" id="date" placeholder="Choose Date" [min]="today" formControlName="date">
             @if(addForm.invalid && (addForm.dirty || addForm.touched)) {
@@ -48,11 +48,11 @@
             </div>
             }
         </div>
-        <!-- <div class="mb-8">
+        <!-- <div>
             <label for="attachment">Attach Receipt</label>
             <input type="file" id="attachment" formControlName="attachment">
         </div> -->
-        <div class="mb-8">
+        <div>
             <label for="currency">Currency</label>
             <select name="currency" id="currency" formControlName="currency">
                 <option value="" disabled selected>Select Currency</option>
@@ -67,7 +67,7 @@
             </div>
             }
         </div>
-        <div class="mb-8">
+        <div>
             <app-categories-list [categories]="(categories$ | async) || []"
                 (selectedCategory)="addForm.patchValue({ category: $event.value, icon: $event.icon, color: $event.color })"></app-categories-list>
         </div>

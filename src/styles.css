@@ -9,10 +9,6 @@
     @apply bg-background flex justify-center relative;
   }
 
-  button {
-    @apply bg-primary-dark w-full text-white font-semibold py-2 px-4 rounded shadow hover:bg-primary-light transition duration-200 ease-in-out cursor-pointer;
-  }
-
   main {
     @apply bg-primary-light text-white p-4 rounded-lg shadow-lg;
   }
@@ -21,13 +17,19 @@
     @apply block text-sm font-medium mb-2;
   }
 
+  section {
+    @apply p-6 max-w-[480px] w-screen bg-transparent shadow;
+  }
+}
+
+@layer components {
+  button {
+    @apply bg-primary-dark w-full text-white font-semibold py-2 px-4 rounded shadow hover:bg-primary-light transition duration-200 ease-in-out cursor-pointer;
+  }
+
   input,
   select {
     @apply w-full bg-input-background rounded mb-2 p-2 focus:outline-none focus:ring-2 focus:ring-primary-light;
-  }
-
-  section {
-    @apply p-6 max-w-[480px] w-screen bg-transparent shadow;
   }
 }
 

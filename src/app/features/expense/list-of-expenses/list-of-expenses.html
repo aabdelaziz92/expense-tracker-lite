@@ -1,8 +1,8 @@
 <section class="shadow-none bg-input-background pt-15 min-h-[calc(100vh-300px)]">
     <h3 class="mb-4">Recent Expenses</h3>
-    <ul class="expense-list">
+    <ul class="expense-list space-y-4">
         @for(expense of (expenses$ | async); track expense.id; let i = $index;) {
-        <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2 mb-4"
+        <li class="expense-item flex justify-between items-center shadow rounded px-4 py-2"
             [class.fade-in]="i >= startIndex">
             <div class="flex items-center">
                 <span class="w-8 h-8 rounded-full mr-2 flex items-center justify-center"

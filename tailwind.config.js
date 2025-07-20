@@ -4,10 +4,23 @@ export default {
     ],
     theme: {
         extend: {
-            colors: {
+            colors: { //https://uicolors.app/generate
                 primary: {
                     dark: "#1E55F3",
                     light: "#496EF3"
+                },
+                'blue-ribbon': {
+                    '50': '#eef5ff',
+                    '100': '#dae8ff',
+                    '200': '#bcd7ff',
+                    '300': '#8fbfff',
+                    '400': '#5a9bff',
+                    '500': '#3375fe',
+                    '600': '#1e55f3',
+                    '700': '#153fe0',
+                    '800': '#1834b5',
+                    '900': '#1a328e',
+                    '950': '#152056',
                 },
                 error: "#F44336",
                 success: "#4CAF50",
@@ -33,3 +46,15 @@ export default {
     },
     plugins: [],
 }
+
+// --color-blue-ribbon-50: #eef5ff;
+// --color-blue-ribbon-100: #dae8ff;
+// --color-blue-ribbon-200: #bcd7ff;
+// --color-blue-ribbon-300: #8fbfff;
+// --color-blue-ribbon-400: #5a9bff;
+// --color-blue-ribbon-500: #3375fe;
+// --color-blue-ribbon-600: #1e55f3;
+// --color-blue-ribbon-700: #153fe0;
+// --color-blue-ribbon-800: #1834b5;
+// --color-blue-ribbon-900: #1a328e;
+// --color-blue-ribbon-950: #152056;
